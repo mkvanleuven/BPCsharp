@@ -67,21 +67,23 @@ namespace BPC
             for (short i = numChannels; i > 0; i--) // Looping backwards because the specific controller in our lab has the channels connected backwards (x => 3, y => 2, z => 1)
             {
                 PiezoChannel channel = controller.GetChannel(i) as PiezoChannel;
-                if (channel == null)
+                if (channel == null)    // Check for invalid channels
                 {
                     Console.WriteLine("Channel {0} unavailable.", i);
                     Console.ReadKey();
                     return;
                 }
-                if (!channel.IsSettingsInitialized())
+                if (!channel.IsSettingsInitialized())   // Check that channel settings are initialised
                 {
                     try
                     {
-                        channel.WaitForSettingsInitialized(5000);
+                        channel.WaitForSettingsInitialized(5000);   // If channel settings not initialised, wait up to 5000ms
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine("Could not initialise settings on channel {0} with exception {1}.", i, ex);
+                        Console.ReadKey();
+                        return;
                     }
 
                 }
@@ -98,7 +100,7 @@ namespace BPC
             }
         }
 
-        public static void SetLoopMode(PiezoChannel channel, string loopMode)
+        public static void SetLoopMode(PiezoChannel channel, string loopMode)   // Set loop mode of the channel
         {
             loopMode = loopMode.ToLower();
             _ = channel.RequestPositionControlMode();
@@ -120,7 +122,7 @@ namespace BPC
             }
         }
 
-        public static decimal GetChannelMaxVoltage(PiezoChannel channel)
+        public static decimal GetChannelMaxVoltage(PiezoChannel channel)    // Get maximum voltage of the channel
         {
             decimal maxVoltage = channel.GetMaxOutputVoltage();
             // Console.WriteLine("Channel {0} maximum voltage is {1}V.", channel, maxVolts); // Uncomment this line to print the max voltage each time this method is called
@@ -134,9 +136,9 @@ namespace BPC
             return voltage;
         }
 
-        public static void MoveChannelTo(PiezoChannel channel, decimal percentage)
+        public static void MoveChannelTo(PiezoChannel channel, decimal percentage)  // Move channel to percentage of maximum value
         {
-            if (!(0 <= percentage && percentage <= 100))
+            if (!(0 <= percentage && percentage <= 100))    // Check for valid percentage value
             {
                 Console.WriteLine("{0} is not a valid percentage, please choose a value in the range 0 <= percentage <= 100.", percentage);
                 Console.ReadKey();
@@ -159,9 +161,8 @@ namespace BPC
             }
         }
 
-        public static void MoveChannelBy(PiezoChannel channel, decimal percentage)
+        public static void MoveChannelBy(PiezoChannel channel, decimal percentage)  // Move channel by percentage of total range
         {
-
             decimal maxVoltage = GetChannelMaxVoltage(channel);
             decimal currentVoltage = GetChannelVoltage(channel);
             decimal setVoltage = currentVoltage + maxVoltage * percentage / 100;
@@ -186,7 +187,7 @@ namespace BPC
             }
         }
 
-        public static void ZeroChannel(PiezoChannel channel)
+        public static void ZeroChannel(PiezoChannel channel)    // Zero channel
         {
             try
             {
@@ -196,6 +197,8 @@ namespace BPC
             catch (Exception ex)
             {
                 Console.WriteLine("Unable to zero channel {0} with exception {1}.", channel, ex);
+                Console.ReadKey();
+                return;
             }
         }
 
