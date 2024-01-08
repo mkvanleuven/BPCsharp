@@ -202,5 +202,10 @@ namespace BPC
             }
         }
 
+        ~BPC()
+        {
+            // Implement destructor to properly close the piezo controller
+        }
+
     }
 }
