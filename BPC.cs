@@ -7,14 +7,14 @@ using System;
 
 // 71281854
 
-namespace BPC
+namespace BPCsharp
 {
     public class BPC
     {
         public string serialNo;
         public List<PiezoChannel> piezoChannels = new List<PiezoChannel>();
 
-        public BPC(string serialNo, Boolean autoZero = false)
+        public BPC(string serialNo = "00000000", Boolean autoZero = false)
         {
             this.serialNo = serialNo;
 
@@ -205,6 +205,7 @@ namespace BPC
         ~BPC()
         {
             // Implement destructor to properly close the piezo controller
+
         }
 
     }
